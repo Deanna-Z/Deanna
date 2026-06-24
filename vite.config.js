@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  base: '/Deanna/'
+  base: '/Deanna_Portfolio_Website/'
 });
