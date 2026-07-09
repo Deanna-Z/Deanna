@@ -4,7 +4,7 @@ export const articles = [
     title: 'Designing Sound Feedback for Play',
     date: '2026-06-23',
     category: 'Sound Design',
-    cover: '/Deanna/images/ue5_screenshot/screenshot_01.png',
+    cover: new URL('../../images/ue5_screenshot/screenshot_01.png', import.meta.url).href,
     excerpt: 'A working note on making actions feel readable, responsive, and emotionally clear through audio.',
     tags: ['Audio', 'Feedback', 'Process']
   },
@@ -13,7 +13,7 @@ export const articles = [
     title: 'Building UE5 Tools for Faster Review',
     date: '2026-06-23',
     category: 'Technical Art',
-    cover: '/Deanna/images/ue5_screenshot/screenshot_02.png',
+    cover: new URL('../../images/ue5_screenshot/screenshot_02.png', import.meta.url).href,
     excerpt: 'How screenshot bookmarks and repeatable camera positions can improve visual iteration.',
     tags: ['UE5', 'Python', 'Tools']
   },
@@ -22,7 +22,7 @@ export const articles = [
     title: 'AI-Assisted Material Pipeline Notes',
     date: '2026-06-23',
     category: 'Pipeline',
-    cover: '/Deanna/images/ue5_ai_material/ue5_ai_material5.png',
+    cover: new URL('../../images/ue5_ai_material/ue5_ai_material5.png', import.meta.url).href,
     excerpt: 'A compact overview of turning scene references into textured assets inside an Unreal workflow.',
     tags: ['UE5', 'AI', 'Materials']
   }

@@ -1,3 +1,6 @@
+const basePath = import.meta.env.BASE_URL;
+const sitePath = (path) => `${basePath}${path}`;
+
 export const projects = [
   {
     id: 'interstellar-drive',
@@ -8,7 +11,7 @@ export const projects = [
     short: 'A multiverse racing game created for Global Game Jam.',
     description:
       'A fast, playful racing experience shaped through team coordination, scope control, and readable moment-to-moment play.',
-    image: '/Deanna/images/interstellar_drive/image_01.png',
+    image: new URL('../../images/interstellar_drive/image_01.png', import.meta.url).href,
     link: 'https://globalgamejam.org/games/2025/bubble-drift-multiverse-racer-6',
     external: true,
     tags: ['Game Jam', 'Racing', 'Systems'],
@@ -23,7 +26,7 @@ export const projects = [
     short: 'A grid-based puzzle game with compact tactical decisions.',
     description:
       'A polished puzzle project focused on clean rules, level clarity, milestone planning, and a satisfying rhythm of payoff.',
-    image: '/Deanna/images/grid_master/image_01.png',
+    image: new URL('../../images/grid_master/image_01.png', import.meta.url).href,
     link: 'https://kerrylu.itch.io/gridmaster',
     external: true,
     tags: ['Puzzle', 'Level Design', 'Itch.io'],
@@ -38,8 +41,8 @@ export const projects = [
     short: 'An intimate game scene built around mood and story.',
     description:
       'A narrative piece where staging, pacing, team alignment, and sensory detail carry the emotional weight of the experience.',
-    image: '/Deanna/images/the_dinner/image_01.png',
-    link: '/Deanna/the_dinner/',
+    image: new URL('../../images/the_dinner/image_01.png', import.meta.url).href,
+    link: sitePath('the_dinner/'),
     external: false,
     tags: ['Narrative', 'Mood', 'Scene Design'],
     icon: 'Film'
@@ -53,7 +56,7 @@ export const projects = [
     short: 'A playful itch.io project with absurdist systems energy.',
     description:
       'A compact game concept shaped around readable goals, humor, fast iteration, and small-team production constraints.',
-    image: '/Deanna/images/insurance_fraud/image_01.png',
+    image: new URL('../../images/insurance_fraud/image_01.png', import.meta.url).href,
     link: 'https://ronithkumardevarakonda.itch.io/insurance-fraud',
     external: true,
     tags: ['Indie', 'Systems', 'Itch.io'],
@@ -68,8 +71,8 @@ export const projects = [
     short: 'A bookmark and screenshot workflow tool for Unreal Engine 5.',
     description:
       'An Unreal Engine workflow tool that supports versioned visual review, repeatable camera positions, and faster art-team feedback loops.',
-    image: '/Deanna/images/ue5_screenshot/screenshot_02.png',
-    link: '/Deanna/ue5_screenshot/',
+    image: new URL('../../images/ue5_screenshot/screenshot_02.png', import.meta.url).href,
+    link: sitePath('ue5_screenshot/'),
     external: false,
     tags: ['UE5', 'Python', 'Artist Tools'],
     icon: 'Tool'
@@ -83,8 +86,8 @@ export const projects = [
     short: 'A UE5 pipeline connecting viewport screenshots to AI-assisted materials.',
     description:
       'A concept-to-asset workflow using UE5 Python, Hunyuan, and Meshy AI to reduce handoff friction and speed up look-development.',
-    image: '/Deanna/images/ue5_ai_material/ue5_ai_material5.png',
-    link: '/Deanna/ue5_ai_material/',
+    image: new URL('../../images/ue5_ai_material/ue5_ai_material5.png', import.meta.url).href,
+    link: sitePath('ue5_ai_material/'),
     external: false,
     tags: ['UE5', 'AI Pipeline', 'PyQt'],
     icon: 'AI'
@@ -98,7 +101,7 @@ export const projects = [
     short: 'Interactive audio direction, ambience, and gameplay feedback.',
     description:
       'A focused reel showing how sound can clarify interaction, build place, and create emotional texture in games.',
-    image: '/Deanna/images/ue5_screenshot/screenshot_01.png',
+    image: new URL('../../images/ue5_screenshot/screenshot_01.png', import.meta.url).href,
     link: '#sound',
     external: false,
     tags: ['Sound Design', 'Gameplay Audio', 'Ambience'],
