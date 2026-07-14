@@ -3,33 +3,34 @@ const sitePath = (path) => `${basePath}${path}`;
 
 export const projects = [
   {
-    id: 'interstellar-drive',
+    id: 'interstellar-drive-final',
     title: 'Interstellar Drive',
     category: 'Games',
-    role: 'Jam Production / Gameplay',
+    role: 'Capstone Project / Producer & Audio & QA',
     year: '2025',
-    short: 'A multiverse racing game created for Global Game Jam.',
+    short: 'A capstone project exploring cinematic racing, player flow, and production leadership.',
     description:
-      'A fast, playful racing experience shaped through team coordination, scope control, and readable moment-to-moment play.',
-    image: new URL('../../images/interstellar_drive/image_01.png', import.meta.url).href,
-    link: 'https://globalgamejam.org/games/2025/bubble-drift-multiverse-racer-6',
-    external: true,
-    tags: ['Game Jam', 'Racing', 'Systems'],
+      'A co-op racing rhythm game set in a 1970s retro-futurist universe, following a cosmic journey to discover the most beautiful music. As Producer, Audio Director, and QA Director, I helped guide production planning, task tracking, audio direction, and QA testing.',
+    image: new URL('../../images/interstellar_drive_final/card1.png', import.meta.url).href,
+    visualLabel: 'Interstellar Drive',
+    link: sitePath('interstellar_drive_final/'),
+    external: false,
+    tags: ['UE5', 'C++', 'Wwise', 'Reaper', 'Jira', 'Steam'],
     icon: 'Game'
   },
   {
     id: 'grid-master',
     title: 'Grid Master',
     category: 'Games',
-    role: 'Production / Game Design',
+    role: 'Producer / Sound Design',
     year: '2025',
-    short: 'A grid-based puzzle game with compact tactical decisions.',
+    short: 'A grid-based shooting game with compact tactical decisions.',
     description:
-      'A polished puzzle project focused on clean rules, level clarity, milestone planning, and a satisfying rhythm of payoff.',
-    image: new URL('../../images/grid_master/image_01.png', import.meta.url).href,
+      'An award-winning multiplayer third-person shooter where players battle across nine time dimensions and capture three connected eras to win. As the Producer and Sound Designer, I coordinated the development workflow and created the game’s award-winning audio while also contributing to level design and VFX. 🏆 The project won Best Sound Design at the 1st Triangle Game Jam.',
+    image: new URL('../../images/grid_master/card2.png', import.meta.url).href,
     link: 'https://kerrylu.itch.io/gridmaster',
     external: true,
-    tags: ['Puzzle', 'Level Design', 'Itch.io'],
+    tags: ['UE5', 'FL Studio', 'Itch.io'],
     icon: 'Game'
   },
   {
@@ -101,8 +102,8 @@ export const projects = [
     short: 'Interactive audio direction, ambience, and gameplay feedback.',
     description:
       'A focused reel showing how sound can clarify interaction, build place, and create emotional texture in games.',
-    image: new URL('../../images/ue5_screenshot/screenshot_01.png', import.meta.url).href,
-    link: '#sound',
+    image: new URL('../../images/sound_reel/card7.png', import.meta.url).href,
+    link: '#soundreel',
     external: false,
     tags: ['Sound Design', 'Gameplay Audio', 'Ambience'],
     icon: 'Sound'

@@ -8,44 +8,61 @@ const iconMap = {
   Tool: 'TL'
 };
 
-export function renderProjectSection({ activeFilter, filters, isEditing, projects, selectedProject }) {
+export function renderProjectSection({ activeFilter, filters, isEditing, projects, selectedProject, selectedReelIndex }) {
   const visibleProjects =
     activeFilter === 'All' ? projects : projects.filter((project) => project.category === activeFilter);
 
   return `
-    <section class="section works-section cinematic-story" id="work">
-      <div class="section-heading story-heading">
-        <p class="eyebrow">Selected Work</p>
-        <h2>Projects in motion, like a playable reel.</h2>
-        <p class="story-intro">A cinematic project runway plays automatically. Choose a category to focus the reel.</p>
-      </div>
-      <div class="story-cinema" aria-label="Auto-playing project reel">
-        <div class="story-track">
-          ${[...visibleProjects, ...visibleProjects].map((project, index) => renderStoryCard(project, index % visibleProjects.length, isEditing)).join('')}
+    <section class="section works-section project-index" id="project">
+      <div class="section-heading project-index-heading">
+        <div>
+          <p class="eyebrow">Selected Work</p>
+          <h2 class="section-title">PROJECTS</h2>
         </div>
       </div>
-      <div class="filter-row" aria-label="Project filters">
-        ${filters.map((filter) => `
-          <button class="${filter === activeFilter ? 'filter is-active' : 'filter'}" data-filter="${filter}" type="button">
-            ${filter}
-          </button>
-        `).join('')}
+      <div class="story-cinema project-reel" aria-label="Auto-playing project reel">
+        <div class="story-track">
+          ${[...visibleProjects, ...visibleProjects].map((project, index) => renderStoryCard(project, index % visibleProjects.length, index, selectedReelIndex, isEditing)).join('')}
+        </div>
       </div>
       ${renderProjectSpotlight(selectedProject, isEditing)}
-      <div class="work-layout project-archive">
-        <div class="project-grid">
-          ${visibleProjects.map((project, index) => renderProjectCard(project, index, selectedProject, isEditing)).join('')}
+      <div class="project-browser">
+        <div class="project-browser-topline">
+          <div>
+            <p class="eyebrow">Archive</p>
+            <h3>${activeFilter === 'All' ? 'All projects' : activeFilter}</h3>
+          </div>
+          <div class="filter-row" aria-label="Project filters">
+            ${filters.map((filter) => `
+              <button class="${filter === activeFilter ? 'filter is-active' : 'filter'}" data-filter="${filter}" type="button">
+                ${filter}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+        <div class="work-layout project-archive">
+          <div class="project-grid">
+            ${visibleProjects.map((project, index) => renderProjectCard(project, index, selectedProject, isEditing)).join('')}
+          </div>
         </div>
       </div>
     </section>
   `;
 }
 
-function renderStoryCard(project, index, isEditing) {
+function renderStoryCard(project, index, reelIndex, selectedReelIndex, isEditing) {
   return `
-    <article class="story-card" data-project="${project.id}">
+    <article
+      class="${reelIndex === selectedReelIndex ? 'story-card is-selected' : 'story-card'}"
+      data-project="${project.id}"
+      data-reel-index="${reelIndex}"
+      data-project-link="${project.link || ''}"
+      data-project-external="${project.external ? 'true' : 'false'}"
+      role="button"
+      tabindex="0"
+    >
       <div class="story-image">
-        <img src="${project.image}" alt="${project.title}" />
+        ${renderProjectVisual(project)}
       </div>
       <div class="story-card-body">
         <span class="story-step">${String(index + 1).padStart(2, '0')} / ${project.category}</span>
@@ -68,8 +85,7 @@ function renderProjectCard(project, index, selectedProject, isEditing) {
     >
       <span class="mission-index">${String(index + 1).padStart(2, '0')}</span>
       <span class="mission-status">${project.category}</span>
-      <img src="${project.image}" alt="${project.title}" />
-      <span class="project-meta">${project.year} / ${project.role}</span>
+      ${renderProjectVisual(project)}
       ${editableText({ isEditing, path: `projects.${project.id}.title`, tag: 'strong', value: project.title })}
       ${editableText({ isEditing, path: `projects.${project.id}.short`, value: project.short })}
       <span class="mission-action">${project.id === selectedProject.id ? 'In spotlight' : 'View spotlight'}</span>
@@ -81,16 +97,12 @@ function renderProjectSpotlight(project, isEditing) {
   return `
     <article class="project-spotlight" aria-live="polite">
       <div class="spotlight-media">
-        <img src="${project.image}" alt="${project.title}" />
+        ${renderProjectVisual(project)}
         <div class="spotlight-orbit" aria-hidden="true">
           <span>${iconMap[project.icon] || 'PR'}</span>
         </div>
       </div>
       <div class="spotlight-copy">
-        <div class="spotlight-kicker">
-          <span>${project.category}</span>
-          <span>${project.year}</span>
-        </div>
         <p class="eyebrow">${project.role}</p>
         ${editableText({ isEditing, path: `projects.${project.id}.title`, tag: 'h3', value: project.title })}
         ${editableText({ isEditing, path: `projects.${project.id}.description`, tag: 'p', value: project.description })}
@@ -107,5 +119,17 @@ function renderProjectSpotlight(project, isEditing) {
         ` : ''}
       </div>
     </article>
+  `;
+}
+
+function renderProjectVisual(project) {
+  if (project.image) {
+    return `<img src="${project.image}" alt="${project.title}" />`;
+  }
+
+  return `
+    <div class="project-visual-placeholder" role="img" aria-label="${project.title} cover placeholder">
+      <span>${project.visualLabel || project.title}</span>
+    </div>
   `;
 }

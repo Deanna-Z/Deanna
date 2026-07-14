@@ -2,10 +2,10 @@ import { editableText } from '../utils/editor.js';
 
 export function renderSoundSection({ isEditing, soundReel }) {
   return `
-    <section class="section sound-section" id="sound">
+    <section class="section sound-section" id="soundreel">
       <div class="section-heading">
         <p class="eyebrow">${soundReel.kicker}</p>
-        ${editableText({ isEditing, path: 'soundReel.title', tag: 'h2', value: soundReel.title })}
+        ${editableText({ className: 'section-title', isEditing, path: 'soundReel.title', tag: 'h2', value: soundReel.title })}
       </div>
       <div class="sound-layout">
         <div class="sound-copy">

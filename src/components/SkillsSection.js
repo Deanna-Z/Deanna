@@ -9,7 +9,7 @@ export function renderSkillsSection({ isEditing, skills }) {
     <section class="section skills-section" id="skills">
       <div class="section-heading">
         <p class="eyebrow">Capabilities</p>
-        <h2>A practice across production, product judgment, gameplay development, and audio-led creative identity.</h2>
+        <h2 class="section-title">SKILLS</h2>
       </div>
       <div class="skills-grid">
         ${skills.map((skill, index) => `

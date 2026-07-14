@@ -5,7 +5,7 @@ export function renderArticleSection({ articles, isEditing }) {
     <section class="section articles-section" id="articles">
       <div class="section-heading">
         <p class="eyebrow">Articles / Devlog</p>
-        <h2>Notes on sound, tools, games, and process.</h2>
+        <h2 class="section-title">ARTICLES</h2>
       </div>
       <div class="article-grid">
         ${articles.map((article, index) => renderArticleCard(article, index, isEditing)).join('')}
