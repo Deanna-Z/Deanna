@@ -1,5 +1,7 @@
 const iconMap = {
+  AI: 'AI',
   Game: 'GM',
+  Product: 'PM',
   Sound: 'SD',
   Tool: 'TL'
 };

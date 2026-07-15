@@ -5,8 +5,7 @@ export const soundReel = {
   kicker: 'Sound Reel',
   label: 'Audio',
   title: 'Audio creation as product feel, atmosphere, and player feedback.',
-  description:
-    'I co-create these Suno AI tracks through MIDI keyboard sketches, 10+ years of music theory study, and hands-on musicianship across eight instruments.',
+  description: 'I co-create these Suno AI tracks through MIDI keyboard sketches, 10+ years of music theory study, and hands-on musicianship across eight instruments.',
   embedUrl: 'https://www.youtube.com/embed/hR0oe4qIBu8?si=EjgPTOAG6iWvFyYN',
   musicTracks: [
     {

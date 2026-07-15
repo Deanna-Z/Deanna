@@ -4,11 +4,11 @@ const sitePath = (path) => `${basePath}${path}`;
 export const projects = [
   {
     id: 'interstellar-drive-final',
-    title: 'Interstellar Drive',
+    title: 'Sound Reel',
     category: 'Games',
     role: 'Capstone Project / Producer & Audio & QA',
     year: '2025',
-    short: 'A capstone project exploring cinematic racing, player flow, and production leadership.',
+    short: 'Interactive Audio Direction, Dynamic Audio Systems, Ambience, and Gameplay Feedback',
     description:
       '🚀 A <b>co-op</b> <b>racing</b> 🚗 <b>rhythm 🎵 game</b> set in a 1970s retro-futurist universe, following a cosmic journey to discover the most beautiful music. As <b>Producer, Audio Director</b>, and <b>QA Director</b>, I helped guide <b>production planning</b>, <b>task tracking</b>, <b>audio direction</b> 🔊, and <b>QA testing</b>.',
     image: new URL('../../images/interstellar_drive_final/card1.png', import.meta.url).href,
@@ -112,18 +112,18 @@ export const projects = [
 
 export const skills = [
   {
-    title: 'Game Production',
-    text: 'Scope planning, milestone tracking, team coordination, risk awareness, and keeping creative goals actionable.',
+    title: '🎮 Game Production',
+    text: 'Agile production, scope planning, sprint coordination, milestone tracking, risk management, playtesting, and cross-functional team leadership.',
     icon: 'Game'
   },
   {
-    title: 'Product & Gameplay',
-    text: 'Player goals, feature prioritization, gameplay implementation, feedback loops, and decisions that support the core experience.',
-    icon: 'Sound'
+    title: '🤖 AI &amp; Creative Technology',
+    text: 'AI-powered product development, workflow automation, rapid prototyping, prompt design, and human-centered AI experiences.',
+    icon: 'AI'
   },
   {
-    title: 'Audio Creation',
-    text: 'Sound design judgment, dynamic ambience, musical thinking, and audio direction that gives games identity.',
-    icon: 'Tool'
+    title: '📊 Product Management',
+    text: 'User research, product strategy, feature prioritization, roadmap planning, stakeholder alignment, and data-informed iteration.',
+    icon: 'Product'
   }
 ];

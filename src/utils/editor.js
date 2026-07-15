@@ -34,7 +34,7 @@ function sanitizeNode(node) {
   const children = Array.from(node.childNodes).map(sanitizeNode).join('');
   const tagName = node.tagName.toLowerCase();
 
-  if (tagName === 'strong' || tagName === 'b') {
+  if (tagName === 'strong' || tagName === 'b' || hasBoldStyle(node)) {
     return `<b>${children}</b>`;
   }
 
@@ -43,4 +43,11 @@ function sanitizeNode(node) {
   }
 
   return children;
+}
+
+function hasBoldStyle(node) {
+  const fontWeight = node.getAttribute('style')?.match(/font-weight\s*:\s*([^;]+)/i)?.[1]?.trim().toLowerCase();
+  if (!fontWeight) return false;
+
+  return fontWeight === 'bold' || Number(fontWeight) >= 600;
 }

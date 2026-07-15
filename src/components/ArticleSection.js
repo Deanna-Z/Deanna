@@ -4,7 +4,7 @@ export function renderArticleSection({ articles, isEditing }) {
   return `
     <section class="section articles-section" id="articles">
       <div class="section-heading">
-        <p class="eyebrow">Documents / Podcasts</p>
+        <p class="eyebrow">Writing &amp; Reflections</p>
         <h2 class="section-title">NOTES</h2>
       </div>
       <div class="article-directory">
@@ -22,7 +22,7 @@ function renderArticleRow(article, index, isEditing) {
         <strong>${escapeHtml(article.category)}</strong>
       </div>
       <div class="article-row-main">
-        <p class="project-meta">${escapeHtml(article.date)} / Notion doc</p>
+        <p class="project-meta article-row-meta">${escapeHtml(article.date)} / ${escapeHtml(article.typeLabel || 'Notion doc')}</p>
         ${editableText({ isEditing, path: `articles.${article.id}.title`, tag: 'h3', value: article.title })}
         ${editableText({ isEditing, path: `articles.${article.id}.excerpt`, tag: 'p', value: article.excerpt })}
         <div class="tag-row">
@@ -30,7 +30,7 @@ function renderArticleRow(article, index, isEditing) {
         </div>
       </div>
       <a class="article-row-link" href="${escapeHtml(article.href || '#articles')}" target="_blank" rel="noreferrer">
-        Open Notion <span aria-hidden="true">-&gt;</span>
+        ${escapeHtml(article.linkLabel || 'Open Notion')} <span aria-hidden="true">-&gt;</span>
       </a>
     </article>
   `;

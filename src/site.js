@@ -22,6 +22,8 @@ const state = {
   selectedProjectId: initialProjectId || projects[0].id
 };
 
+let savedEditableRange = null;
+
 function render() {
   const root = document.getElementById('root');
   const content = createContent();
@@ -95,21 +97,28 @@ function bindEvents() {
   });
 
   document.querySelector('[data-editor-toggle]')?.addEventListener('click', () => {
+    if (state.isEditing) {
+      persistAllEditableElements();
+      savedEditableRange = null;
+    }
     state.isEditing = !state.isEditing;
     render();
   });
 
   document.querySelector('[data-editor-bold]')?.addEventListener('mousedown', (event) => {
     event.preventDefault();
+    saveCurrentEditableRange();
   });
 
   document.querySelector('[data-editor-bold]')?.addEventListener('click', () => {
+    restoreSavedEditableRange();
     const editableElement = getSelectedEditableElement();
     if (!editableElement) return;
 
     editableElement.focus();
     document.execCommand('bold');
     saveEditableElement(editableElement);
+    requestAnimationFrame(() => saveEditableElement(editableElement));
   });
 
   document.querySelector('[data-editor-reset]')?.addEventListener('click', () => {
@@ -166,11 +175,14 @@ function bindEvents() {
   });
 
   document.querySelectorAll('[data-edit-path]').forEach((element) => {
+    element.addEventListener('mouseup', saveCurrentEditableRange);
+    element.addEventListener('keyup', saveCurrentEditableRange);
+
     element.addEventListener('keydown', (event) => {
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'b') {
         event.preventDefault();
         document.execCommand('bold');
-        saveEditableElement(element);
+        requestAnimationFrame(() => saveEditableElement(element));
       }
     });
 
@@ -320,6 +332,24 @@ function getSelectedEditableElement() {
   return anchorElement;
 }
 
+function saveCurrentEditableRange() {
+  const selection = window.getSelection();
+  if (!selection || selection.rangeCount === 0 || selection.isCollapsed) return;
+
+  const editableElement = getSelectedEditableElement();
+  if (!editableElement) return;
+
+  savedEditableRange = selection.getRangeAt(0).cloneRange();
+}
+
+function restoreSavedEditableRange() {
+  if (!savedEditableRange) return;
+
+  const selection = window.getSelection();
+  selection.removeAllRanges();
+  selection.addRange(savedEditableRange);
+}
+
 function getClosestEditableElement(node) {
   const element = node?.nodeType === Node.ELEMENT_NODE ? node : node?.parentElement;
   return element?.closest?.('[data-edit-path]') || null;
@@ -333,6 +363,12 @@ function saveEditableElement(element) {
   localStorage.setItem(storageKey, JSON.stringify(state.edits));
   element.innerHTML = value;
   return true;
+}
+
+function persistAllEditableElements() {
+  document.querySelectorAll('[data-edit-path]').forEach((element) => {
+    saveEditableElement(element);
+  });
 }
 
 function createContent() {
@@ -367,10 +403,123 @@ function migrateEdits(edits) {
   const interstellarDescription = edits[interstellarDescriptionPath];
   const soundDescriptionPath = 'soundReel.description';
   const soundDescription = edits[soundDescriptionPath];
+  const ragNoteTitlePath = 'articles.sound-feedback-notes.title';
+  const ragNoteExcerptPath = 'articles.sound-feedback-notes.excerpt';
+  const planetWarsTitlePath = 'articles.ai-material-pipeline.title';
+  const planetWarsExcerptPath = 'articles.ai-material-pipeline.excerpt';
+  const leanCanvasTitlePath = 'articles.ue5-tool-devlog.title';
+  const leanCanvasExcerptPath = 'articles.ue5-tool-devlog.excerpt';
+  const fmodTitlePath = 'articles.fmod-setting.title';
+  const fmodExcerptPath = 'articles.fmod-setting.excerpt';
   const soundFinalDescription =
     'I co-create these Suno AI tracks through MIDI keyboard sketches, 10+ years of music theory study, and hands-on musicianship across eight instruments.';
+  const ragNoteFinalTitle = 'Building a Knowledge Base for RAG';
+  const ragNoteFinalExcerpt =
+    'A practical guide to transforming raw documents into structured, searchable knowledge through document loading, text chunking, embedding, and vector storage.';
+  const planetWarsFinalTitle = 'Building an AI Agent for Planet Wars RTS';
+  const planetWarsFinalExcerpt =
+    'A hands-on exploration of game AI, developing and optimizing autonomous agents that evaluate game states, make strategic decisions, and compete across varied real-time strategy scenarios.';
+  const leanCanvasFinalTitle = 'Lean Canvas Analysis of Game Interstellar Drive';
+  const leanCanvasFinalExcerpt =
+    'A Lean Canvas analysis exploring the game’s target audience, player needs, unique value proposition, market positioning, and potential business model.';
+  const fmodFinalTitle = 'FMOD Integration and Setup in Unreal Engine 5';
+  const fmodFinalExcerpt =
+    'A setup note on getting FMOD connected inside Unreal Engine, from project integration to basic event workflow and implementation checks.';
   const interstellarFinalDescription =
     '🚀 A <b>co-op</b> <b>racing</b> 🚗 <b>rhythm 🎵 game</b> set in a 1970s retro-futurist universe, following a cosmic journey to discover the most beautiful music. As <b>Producer, Audio Director</b>, and <b>QA Director</b>, I helped guide <b>production planning</b>, <b>task tracking</b>, <b>audio direction</b> 🔊, and <b>QA testing</b>.';
+  const skillFinalEdits = {
+    'skills.0.title': '🎮 Game Production',
+    'skills.0.text':
+      'Agile production, scope planning, sprint coordination, milestone tracking, risk management, playtesting, and cross-functional team leadership.',
+    'skills.1.title': '🤖 AI &amp; Creative Technology',
+    'skills.1.text':
+      'AI-powered product development, workflow automation, rapid prototyping, prompt design, and human-centered AI experiences.',
+    'skills.2.title': '📊 Product Management',
+    'skills.2.text':
+      'User research, product strategy, feature prioritization, roadmap planning, stakeholder alignment, and data-informed iteration.'
+  };
+  const legacySkillEdits = {
+    'skills.0.title': ['Game Production'],
+    'skills.0.text': [
+      'Scope planning, milestone tracking, team coordination, risk awareness, and keeping creative goals actionable.'
+    ],
+    'skills.1.title': ['Product &amp; Gameplay', 'Product & Gameplay'],
+    'skills.1.text': [
+      'Player goals, feature prioritization, gameplay implementation, feedback loops, and decisions that support the core experience.'
+    ],
+    'skills.2.title': ['Audio Creation'],
+    'skills.2.text': [
+      'Sound design judgment, dynamic ambience, musical thinking, and audio direction that gives games identity.'
+    ]
+  };
+  let didMigrateSkills = false;
+
+  Object.entries(skillFinalEdits).forEach(([path, value]) => {
+    if (edits[path] === undefined || legacySkillEdits[path]?.includes(edits[path])) {
+      edits[path] = value;
+      didMigrateSkills = true;
+    }
+  });
+
+  if (didMigrateSkills) {
+    localStorage.setItem(storageKey, JSON.stringify(edits));
+  }
+
+  if (edits[ragNoteTitlePath] === 'Designing Sound Feedback for Play') {
+    edits[ragNoteTitlePath] = ragNoteFinalTitle;
+    localStorage.setItem(storageKey, JSON.stringify(edits));
+  }
+
+  if (
+    edits[ragNoteExcerptPath] ===
+    'A working note on making actions feel readable, responsive, and emotionally clear through audio.'
+  ) {
+    edits[ragNoteExcerptPath] = ragNoteFinalExcerpt;
+    localStorage.setItem(storageKey, JSON.stringify(edits));
+  }
+
+  if (edits[planetWarsTitlePath] === 'Planet Wars AI Challenge') {
+    edits[planetWarsTitlePath] = planetWarsFinalTitle;
+    localStorage.setItem(storageKey, JSON.stringify(edits));
+  }
+
+  if (edits[planetWarsTitlePath] && edits[planetWarsTitlePath] !== planetWarsFinalTitle) {
+    edits[planetWarsTitlePath] = planetWarsFinalTitle;
+    localStorage.setItem(storageKey, JSON.stringify(edits));
+  }
+
+  if (
+    edits[planetWarsExcerptPath] ===
+    'A technical note on building strategy, decision-making logic, and iterative improvements for an AI gameplay challenge.'
+  ) {
+    edits[planetWarsExcerptPath] = planetWarsFinalExcerpt;
+    localStorage.setItem(storageKey, JSON.stringify(edits));
+  }
+
+  if (edits[planetWarsExcerptPath] && edits[planetWarsExcerptPath] !== planetWarsFinalExcerpt) {
+    edits[planetWarsExcerptPath] = planetWarsFinalExcerpt;
+    localStorage.setItem(storageKey, JSON.stringify(edits));
+  }
+
+  if (edits[leanCanvasTitlePath] !== leanCanvasFinalTitle) {
+    edits[leanCanvasTitlePath] = leanCanvasFinalTitle;
+    localStorage.setItem(storageKey, JSON.stringify(edits));
+  }
+
+  if (edits[leanCanvasExcerptPath] !== leanCanvasFinalExcerpt) {
+    edits[leanCanvasExcerptPath] = leanCanvasFinalExcerpt;
+    localStorage.setItem(storageKey, JSON.stringify(edits));
+  }
+
+  if (edits[fmodExcerptPath] !== fmodFinalExcerpt) {
+    edits[fmodExcerptPath] = fmodFinalExcerpt;
+    localStorage.setItem(storageKey, JSON.stringify(edits));
+  }
+
+  if (edits[fmodTitlePath] !== fmodFinalTitle) {
+    edits[fmodTitlePath] = fmodFinalTitle;
+    localStorage.setItem(storageKey, JSON.stringify(edits));
+  }
 
   if (
     typeof dinnerDescription === 'string' &&
@@ -403,7 +552,8 @@ function migrateEdits(edits) {
 }
 
 function setContentValue(content, path, value) {
-  const [group, idOrField, field] = path.split('.');
+  const parts = path.split('.');
+  const [group, idOrField, field] = parts;
 
   if (group === 'profile') {
     if (idOrField === 'about') {
@@ -412,13 +562,14 @@ function setContentValue(content, path, value) {
         return;
       }
 
-      const [, , sectionIndex, sectionField] = path.split('.');
       if (field === 'paragraphs') {
-        content.profile.about.paragraphs[Number(sectionIndex)] = value;
+        content.profile.about.paragraphs[Number(parts[3])] = value;
         return;
       }
 
-      const highlight = content.profile.about.highlights[Number(sectionIndex)];
+      const sectionIndex = parts[3];
+      const sectionField = parts[4];
+      const highlight = content.profile.about.highlights?.[Number(sectionIndex)];
       if (highlight) highlight[sectionField] = value;
       return;
     }

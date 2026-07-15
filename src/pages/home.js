@@ -16,7 +16,6 @@ export function renderHome({ articles, filters, profile, projects, selectedProje
   return `
     <main class="site-shell" style="--spotlight-font-scale: ${spotlightFontScale}; --project-filter-offset: ${projectFilterOffset}vw;">
       ${renderNav({ menuOpen: state.menuOpen, profile })}
-      ${renderEditorToolbar({ isEditing: state.isEditing, projectFilterOffset, spotlightFontScale })}
       ${renderHero({ isEditing: state.isEditing, profile, projectCount: projects.length, soundReel })}
       ${renderAboutSection({ isEditing: state.isEditing, profile })}
       ${renderProjectSection({

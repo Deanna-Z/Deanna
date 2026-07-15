@@ -17,10 +17,6 @@ export function renderHero({ isEditing, profile, projectCount, soundReel }) {
         <span>PORTFOLIO / 2026</span>
         <strong>AVAILABLE</strong>
       </div>
-      <div class="hero-hud hero-hud-right" aria-hidden="true">
-        <span>LOCATION</span>
-        <strong>${escapeHtml(profile.location)}</strong>
-      </div>
       <div class="hero-content">
         ${editableText({
           className: 'eyebrow',
