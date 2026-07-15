@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  base: '/Deanna_Portfolio_Website/',
+  base: '/D1/',
   server: {
     watch: {
       interval: 500,
