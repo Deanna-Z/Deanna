@@ -25,7 +25,6 @@ export function renderProjectSection({ activeFilter, filters, isEditing, project
           ${[...visibleProjects, ...visibleProjects].map((project, index) => renderStoryCard(project, index % visibleProjects.length, index, selectedReelIndex, isEditing)).join('')}
         </div>
       </div>
-      ${renderProjectSpotlight(selectedProject, isEditing)}
       <div class="project-browser">
         <div class="project-browser-topline">
           <div>
@@ -46,6 +45,7 @@ export function renderProjectSection({ activeFilter, filters, isEditing, project
           </div>
         </div>
       </div>
+      ${renderProjectSpotlight(selectedProject, isEditing)}
     </section>
   `;
 }

@@ -6,16 +6,19 @@
     <title>Interstellar Drive | Deanna Zhao</title>
     <meta
       name="description"
-      content="Interstellar Drive final project case study by Yaqing Deanna Zhao."
+      content="Interstellar Drive master capstone case study by Yaqing Deanna Zhao."
     />
     <style>
       :root {
-        --ink: #191920;
-        --muted: #6f717b;
-        --paper: #fbf9f3;
+        --ink: #171821;
+        --muted: #666a78;
+        --paper: rgba(255, 255, 255, 0.76);
+        --line: rgba(255, 255, 255, 0.78);
         --pink: #ff4f93;
-        --violet: #6f66ff;
-        --blue: #556bff;
+        --violet: #746cff;
+        --cyan: #34d5ff;
+        --yellow: #ffd86b;
+        --shadow: 0 1.8rem 4.8rem rgba(33, 35, 62, 0.13);
       }
 
       * {
@@ -24,9 +27,10 @@
 
       body {
         background:
-          radial-gradient(circle at 18% 10%, rgba(178, 194, 255, 0.78), transparent 32rem),
-          radial-gradient(circle at 82% 72%, rgba(255, 171, 156, 0.56), transparent 34rem),
-          linear-gradient(115deg, #f8f9ff 0%, #fffdf7 52%, #ffe6df 100%);
+          radial-gradient(circle at 12% 8%, rgba(116, 108, 255, 0.18), transparent 34rem),
+          radial-gradient(circle at 90% 14%, rgba(255, 79, 147, 0.22), transparent 34rem),
+          radial-gradient(circle at 75% 82%, rgba(52, 213, 255, 0.12), transparent 32rem),
+          linear-gradient(135deg, #fbfbff 0%, #fff8fb 52%, #f6f3ff 100%);
         color: var(--ink);
         font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         margin: 0;
@@ -37,278 +41,634 @@
         text-decoration: none;
       }
 
-      .case-nav {
+      .page {
+        margin: 0 auto;
+        max-width: 1580px;
+        padding: clamp(1.4rem, 4vw, 3rem) clamp(1.2rem, 4vw, 3rem) 4rem;
+      }
+
+      .topbar {
         align-items: center;
-        backdrop-filter: blur(20px);
-        background: rgba(255, 255, 255, 0.78);
-        border-radius: 999px;
-        box-shadow: 0 1.4rem 3.5rem rgba(45, 49, 83, 0.12);
         display: flex;
         justify-content: space-between;
-        left: 50%;
-        padding: 0.65rem 0.8rem;
-        position: fixed;
-        top: 1rem;
-        transform: translateX(-50%);
-        width: min(46rem, calc(100% - 2rem));
-        z-index: 10;
+        margin-bottom: clamp(1.8rem, 5vw, 4rem);
       }
 
-      .case-nav strong {
-        background: linear-gradient(135deg, var(--pink), var(--violet));
-        border-radius: 0.85rem;
-        color: #ffffff;
+      .pill,
+      .back-link {
+        align-items: center;
+        background: rgba(255, 255, 255, 0.72);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        box-shadow: 0 1rem 2.4rem rgba(45, 49, 83, 0.08);
+        color: #656978;
+        display: inline-flex;
+        font-size: 0.84rem;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        padding: 0.8rem 1.05rem;
+        text-transform: uppercase;
+      }
+
+      .hero {
+        align-items: center;
         display: grid;
-        height: 2.45rem;
-        place-items: center;
-        text-transform: lowercase;
-        width: 2.45rem;
+        gap: clamp(1.6rem, 3.5vw, 3.4rem);
+        grid-template-columns: minmax(0, 1.32fr) minmax(25rem, 0.68fr);
+        margin-bottom: clamp(2.4rem, 6vw, 5rem);
       }
 
-      .case-nav span,
-      .case-nav a {
-        font-size: 0.9rem;
-        font-weight: 850;
+      .poster {
+        background: #11121a;
+        border-radius: 1.45rem;
+        box-shadow: var(--shadow);
+        overflow: hidden;
       }
 
-      .case-shell {
-        padding: 7.5rem clamp(1.2rem, 6vw, 5rem) 5rem;
+      .poster img {
+        display: block;
+        width: 100%;
       }
 
-      .case-hero,
-      .case-section {
-        margin: 0 auto;
-        max-width: 118rem;
-      }
-
-      .case-hero {
-        display: grid;
-        gap: clamp(1.8rem, 4vw, 4rem);
-        grid-template-columns: minmax(0, 0.78fr) minmax(22rem, 0.52fr);
-        min-height: 82vh;
+      .hero-copy {
+        align-self: center;
+        background: transparent;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        padding: 0;
       }
 
       .eyebrow {
         color: var(--violet);
-        font-size: 0.9rem;
+        font-size: 0.82rem;
         font-weight: 950;
-        letter-spacing: 0.22em;
+        letter-spacing: 0.28em;
         margin: 0 0 1rem;
         text-transform: uppercase;
       }
 
       h1 {
-        font-size: clamp(4.5rem, 11vw, 11rem);
-        letter-spacing: -0.07em;
-        line-height: 0.86;
+        font-size: clamp(3.4rem, 5.1vw, 6rem);
+        letter-spacing: 0;
+        line-height: 0.98;
+        margin: 0;
+        overflow-wrap: normal;
+      }
+
+      .lede {
+        color: var(--muted);
+        font-size: clamp(1.05rem, 1.45vw, 1.22rem);
+        font-weight: 650;
+        line-height: 1.58;
+        margin: 1.45rem 0 0;
+        max-width: 40rem;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 1.8rem;
+        max-width: 35rem;
+      }
+
+      .button {
+        background: #171821;
+        border-radius: 999px;
+        color: #ffffff;
+        display: inline-flex;
+        font-size: 0.86rem;
+        font-weight: 950;
+        letter-spacing: 0.08em;
+        padding: 0.95rem 1.2rem;
+        text-transform: uppercase;
+      }
+
+      .button.secondary {
+        background: rgba(255, 255, 255, 0.82);
+        color: #5e6373;
+      }
+
+      .stats {
+        display: grid;
+        gap: 0.85rem;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        margin-bottom: clamp(2.4rem, 6vw, 5rem);
+      }
+
+      .stat {
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: 1.15rem;
+        box-shadow: 0 1rem 2.6rem rgba(45, 49, 83, 0.08);
+        padding: 1.15rem 1.25rem;
+      }
+
+      .stat strong {
+        display: block;
+        font-size: clamp(1.55rem, 2.4vw, 2.35rem);
+        line-height: 1;
+      }
+
+      .stat span {
+        color: var(--muted);
+        display: block;
+        font-size: clamp(0.98rem, 1.2vw, 1.12rem);
+        font-weight: 800;
+        line-height: 1.35;
+        margin-top: 0.7rem;
+      }
+
+      .section {
+        margin-top: clamp(2.6rem, 6vw, 5rem);
+      }
+
+      .section-heading {
+        display: grid;
+        gap: 1.2rem;
+        grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+        margin-bottom: 1.3rem;
+      }
+
+      h2 {
+        font-size: clamp(1.85rem, 3.2vw, 3rem);
+        letter-spacing: 0;
+        line-height: 0.96;
         margin: 0;
       }
 
-      .case-summary {
-        align-self: end;
-        backdrop-filter: blur(22px);
-        background: rgba(255, 255, 255, 0.62);
-        border: 1px solid rgba(255, 255, 255, 0.74);
-        border-radius: 2rem;
-        box-shadow: 0 1.8rem 4.8rem rgba(59, 64, 101, 0.13);
-        padding: clamp(1.2rem, 2.4vw, 2rem);
-      }
-
-      .case-summary p {
+      .section-heading p {
         color: var(--muted);
-        font-size: clamp(1.05rem, 1.35vw, 1.28rem);
+        font-size: clamp(1rem, 1.35vw, 1.13rem);
+        font-weight: 520;
         line-height: 1.72;
         margin: 0;
       }
 
-      .case-visual {
-        align-items: end;
-        background:
-          radial-gradient(circle at 72% 28%, rgba(255, 79, 147, 0.78), transparent 22rem),
-          radial-gradient(circle at 30% 78%, rgba(111, 102, 255, 0.75), transparent 22rem),
-          linear-gradient(135deg, #181923 0%, #3c2c76 48%, #ff9fb8 100%);
-        border-radius: 2rem;
-        color: #ffffff;
-        display: grid;
-        min-height: clamp(22rem, 44vw, 42rem);
-        overflow: hidden;
-        padding: clamp(1.4rem, 3vw, 2.4rem);
-        position: relative;
+      .section-heading p strong {
+        color: #2f3340;
+        font-weight: 900;
       }
 
-      .case-visual::before {
-        background:
-          linear-gradient(90deg, rgba(255, 255, 255, 0.18) 1px, transparent 1px),
-          linear-gradient(0deg, rgba(255, 255, 255, 0.16) 1px, transparent 1px);
-        background-size: 2.6rem 2.6rem;
-        content: "";
-        inset: 42% -8% -10%;
-        opacity: 0.54;
-        position: absolute;
-        transform: perspective(20rem) rotateX(58deg);
-        transform-origin: center top;
-      }
-
-      .case-visual p {
-        font-size: clamp(2rem, 5vw, 5.4rem);
-        font-weight: 950;
-        letter-spacing: -0.06em;
-        line-height: 0.9;
-        margin: 0;
-        max-width: 10ch;
-        position: relative;
-        z-index: 1;
-      }
-
-      .meta-grid,
-      .case-grid {
+      .role-grid {
         display: grid;
         gap: 1rem;
         grid-template-columns: repeat(3, minmax(0, 1fr));
-        margin-top: clamp(2rem, 5vw, 4rem);
       }
 
-      .meta-card,
-      .case-card {
-        background: rgba(255, 255, 255, 0.62);
-        border: 1px solid rgba(255, 255, 255, 0.74);
-        border-radius: 1.4rem;
-        padding: 1.2rem;
+      .card {
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: 1.2rem;
+        box-shadow: 0 1.1rem 2.8rem rgba(45, 49, 83, 0.08);
+        padding: clamp(1.05rem, 1.65vw, 1.35rem);
       }
 
-      .meta-card span,
-      .case-card span {
-        color: var(--violet);
+      .card .number {
+        color: var(--pink);
         display: block;
         font-size: 0.78rem;
         font-weight: 950;
-        letter-spacing: 0.16em;
-        margin-bottom: 0.6rem;
+        letter-spacing: 0.18em;
+        margin-bottom: 0.9rem;
         text-transform: uppercase;
       }
 
-      .meta-card strong,
-      .case-card h2 {
-        font-size: clamp(1.4rem, 2vw, 2.2rem);
-        letter-spacing: -0.04em;
-        line-height: 1;
+      .card h3 {
+        font-size: clamp(1.12rem, 1.65vw, 1.32rem);
+        line-height: 1.16;
+        margin: 0 0 0.72rem;
+      }
+
+      .card p,
+      .card li {
+        color: var(--muted);
+        font-size: clamp(0.95rem, 1.15vw, 1.02rem);
+        font-weight: 600;
+        line-height: 1.65;
+      }
+
+      .card p {
         margin: 0;
       }
 
-      .case-card p {
-        color: var(--muted);
+      .card ul {
+        margin: 0;
+        padding-left: 1.2rem;
+      }
+
+      .card li + li {
+        margin-top: 0.45rem;
+      }
+
+      .media-grid {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      }
+
+      .media-card {
+        background: rgba(255, 255, 255, 0.7);
+        border: 1px solid var(--line);
+        border-radius: 1.2rem;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        padding: 0.7rem;
+      }
+
+      .media-card.full {
+        grid-column: 1 / -1;
+      }
+
+      .embed {
+        aspect-ratio: 16 / 9;
+        background: #11121a;
+        border-radius: 0.82rem;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .embed iframe {
+        border: 0;
+        display: block;
+        height: 100%;
+        width: 100%;
+      }
+
+      .media-label {
+        color: #626777;
+        display: flex;
+        font-size: 0.9rem;
+        font-weight: 850;
+        justify-content: space-between;
+        padding: 0.8rem 0.25rem 0.2rem;
+      }
+
+      .showcase-grid {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
+        align-items: stretch;
+      }
+
+      .photo-card {
+        background: rgba(255, 255, 255, 0.72);
+        border: 1px solid var(--line);
+        border-radius: 1.2rem;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        padding: 0.65rem;
+      }
+
+      .photo-card.wide {
+        grid-column: 1 / -1;
+      }
+
+      .photo-card img {
+        aspect-ratio: 16 / 10;
+        border-radius: 0.85rem;
+        display: block;
+        height: 100%;
+        object-fit: cover;
+        width: 100%;
+      }
+
+      .photo-card.team-photo img {
+        aspect-ratio: auto;
+        height: auto;
+        object-fit: contain;
+      }
+
+      .photo-card.merch-card {
+        grid-row: span 2;
+      }
+
+      .photo-card.merch-card img {
+        aspect-ratio: auto;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .photo-card.tall img {
+        aspect-ratio: 5 / 6;
+      }
+
+      .photo-caption {
+        color: #626777;
+        display: grid;
+        gap: 0.25rem;
+        padding: 0.7rem 0.25rem 0.1rem;
+      }
+
+      .photo-caption strong {
+        color: #20222c;
+        font-size: clamp(1rem, 1.3vw, 1.16rem);
+        line-height: 1.2;
+      }
+
+      .photo-caption span {
+        font-size: 0.88rem;
+        font-weight: 750;
+        line-height: 1.35;
+      }
+
+      .controller-row {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-rows: repeat(2, minmax(0, 1fr));
+        height: 100%;
+      }
+
+      .controller-row .photo-card {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+      }
+
+      .controller-row .photo-card img {
+        aspect-ratio: auto;
+        flex: 1;
+        min-height: 0;
+        object-fit: cover;
+      }
+
+      .summary-band {
+        background:
+          linear-gradient(90deg, rgba(116, 108, 255, 0.14), rgba(255, 79, 147, 0.14), rgba(52, 213, 255, 0.12)),
+          rgba(255, 255, 255, 0.64);
+        border: 1px solid var(--line);
+        border-radius: 1.2rem;
+        box-shadow: var(--shadow);
+        padding: clamp(1.4rem, 3vw, 2.2rem);
+      }
+
+      .summary-band p {
+        color: #4f5362;
+        font-size: clamp(1rem, 1.4vw, 1.18rem);
+        font-weight: 700;
         line-height: 1.65;
-        margin: 0.8rem 0 0;
+        margin: 0;
       }
 
-      .case-section {
-        padding-top: clamp(3rem, 7vw, 6rem);
-      }
-
-      .section-title {
-        font-size: clamp(3.4rem, 7vw, 7rem);
-        letter-spacing: -0.06em;
-        line-height: 0.92;
-        margin: 0 0 1.4rem;
-      }
-
-      .note {
-        color: var(--muted);
-        font-size: 1rem;
-        line-height: 1.7;
-        max-width: 46rem;
-      }
-
-      .back-link {
-        color: #ff6f78;
-        display: inline-flex;
-        font-weight: 900;
+      .footer-nav {
+        border-top: 1px solid rgba(120, 122, 150, 0.15);
+        display: flex;
+        justify-content: space-between;
         margin-top: 3rem;
+        padding-top: 1rem;
       }
 
-      @media (max-width: 900px) {
-        .case-hero,
-        .meta-grid,
-        .case-grid {
+      .footer-nav a {
+        color: var(--pink);
+        font-weight: 950;
+      }
+
+      @media (max-width: 1050px) {
+        .hero,
+        .section-heading,
+        .media-grid,
+        .showcase-grid,
+        .controller-row {
           grid-template-columns: 1fr;
         }
 
-        .case-summary {
-          align-self: start;
+        .stats {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .role-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .topbar {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 0.8rem;
+        }
+
+        .hero {
+          grid-template-columns: 1fr;
+        }
+
+        .stats {
+          grid-template-columns: 1fr;
+        }
+
+        .hero-copy,
+        .card,
+        .summary-band {
+          border-radius: 1rem;
         }
       }
     </style>
   </head>
   <body>
-    <nav class="case-nav" aria-label="Project navigation">
-      <strong>dz</strong>
-      <span>Interstellar Drive</span>
-      <a href="../#project">Back to projects</a>
-    </nav>
+    <main class="page">
+      <nav class="topbar" aria-label="Project navigation">
+        <a class="back-link" href="../?project=interstellar-drive-final">Back to projects</a>
+        <span class="pill">01 / Master Capstone / Steam</span>
+      </nav>
 
-    <main class="case-shell">
-      <section class="case-hero">
-        <div>
-          <p class="eyebrow">Final Project</p>
-          <h1>Interstellar Drive</h1>
+      <section class="hero" aria-labelledby="project-title">
+        <figure class="poster">
+          <img src="../images/interstellar_drive_final/card1.png" alt="Interstellar Drive key art">
+        </figure>
+        <div class="hero-copy">
+          <p class="eyebrow">Master Capstone / Producer, Audio Director &amp; QA Director</p>
+          <h1 id="project-title">Interstellar Drive</h1>
+          <p class="lede">
+            A two-year master capstone: a co-op racing rhythm game set in a 1970s retro-futurist universe.
+          </p>
+          <div class="actions">
+            <a class="button" href="https://store.steampowered.com/app/3784700/Interstellar_Drive/" target="_blank" rel="noreferrer">View on Steam</a>
+            <a class="button secondary" href="#demo">Watch Demo</a>
+            <a class="button secondary" href="#gameplay">Full Gameplay</a>
+          </div>
         </div>
-        <div class="case-summary">
+      </section>
+
+      <section class="stats" aria-label="Project scale">
+        <article class="stat">
+          <strong>2 years</strong>
+            <span>master capstone</span>
+        </article>
+        <article class="stat">
+          <strong>6</strong>
+            <span>team members</span>
+        </article>
+        <article class="stat">
+          <strong>20+</strong>
+            <span>builds coordinated</span>
+        </article>
+        <article class="stat">
+          <strong>500+</strong>
+            <span>playtesters</span>
+        </article>
+        <article class="stat">
+          <strong>150+</strong>
+            <span>meeting notes</span>
+        </article>
+      </section>
+
+      <section class="section" id="demo">
+        <div class="section-heading">
+          <h2>Demo Video</h2>
           <p>
-            A final project exploring cinematic racing, player flow, and production leadership. This case study is designed to present the project as a polished portfolio piece rather than a game jam entry.
+            A focused demo clip for quickly understanding the gameplay feel, co-op rhythm, and moment-to-moment racing experience.
+          </p>
+        </div>
+        <div class="media-grid">
+          <article class="media-card full">
+            <div class="embed">
+              <iframe
+                src="https://player.vimeo.com/video/1210016342"
+                title="Interstellar Drive demo video"
+                allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
+                allowfullscreen>
+              </iframe>
+            </div>
+            <div class="media-label">
+              <span>Vimeo Demo</span>
+              <span>Playable feel / short showcase</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-heading">
+          <h2>2026 GDC Showcase</h2>
+          <p>
+            Beyond the video game, <strong>Interstellar Drive</strong> was expanded into an <strong>interactive booth experience</strong> featuring team presentations, <strong>custom merchandise</strong>, <strong>cassette-inspired audio storytelling</strong>, and a <strong>two-player DJ controller setup</strong> that let players <strong>control the game through rhythm</strong>.
+          </p>
+        </div>
+        <div class="showcase-grid" aria-label="Interstellar Drive GDC showcase photos">
+          <article class="photo-card team-photo wide">
+            <img src="../images/interstellar_drive_final/team-gdc.jpg" alt="Interstellar Drive team at the Duke Game Design, Development and Innovation booth">
+            <div class="photo-caption">
+              <strong>Team Showcase</strong>
+              <span>Our capstone team presenting Interstellar Drive at the Duke booth.</span>
+            </div>
+          </article>
+          <article class="photo-card tall merch-card">
+            <img src="../images/interstellar_drive_final/gdc-merch-cassette.jpg" alt="Interstellar Drive GDC merch, cassette cases, tickets, stickers, and keychains">
+            <div class="photo-caption">
+              <strong>GDC Merch &amp; Cassette Storytelling</strong>
+              <span>Custom tickets, stickers, keychains, and cassette tape packaging for the music roadtrip fantasy.</span>
+            </div>
+          </article>
+          <div class="controller-row">
+            <article class="photo-card">
+              <img src="../images/interstellar_drive_final/dj-controller-booth.jpg" alt="Players using a DJ controller to play Interstellar Drive at the booth">
+              <div class="photo-caption">
+                <strong>DJ Controller Play</strong>
+                <span>A physical controller turned racing into a performance-like interaction.</span>
+              </div>
+            </article>
+            <article class="photo-card">
+              <img src="../images/interstellar_drive_final/gdc-booth-wide.jpg" alt="Interstellar Drive setup at the Duke GDC booth">
+              <div class="photo-caption">
+                <strong>Duke Booth Setup</strong>
+                <span>The booth connected the Steam page, playable builds, merch, and project identity in one space.</span>
+              </div>
+            </article>
+            <article class="photo-card">
+              <img src="../images/interstellar_drive_final/dj-controller-main-menu.jpg" alt="Interstellar Drive main menu with DJ controller setup">
+              <div class="photo-caption">
+                <strong>Main Menu Station</strong>
+                <span>The DJ controller made the game feel like a live music-performance interface.</span>
+              </div>
+            </article>
+            <article class="photo-card">
+              <img src="../images/interstellar_drive_final/dj-controller-coop.jpg" alt="Two players controlling Interstellar Drive together using a DJ controller">
+              <div class="photo-caption">
+                <strong>Two-Player Co-op</strong>
+                <span>Two players control the experience together, making the roadtrip feel social and musical.</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-heading">
+          <h2>My Role</h2>
+          <p>
+            I led production coordination, audio direction, and QA planning for a six-person multidisciplinary team.
+          </p>
+        </div>
+        <div class="role-grid">
+          <article class="card">
+            <span class="number">Producer</span>
+            <h3>Planning, Tracking &amp; Team Flow</h3>
+            <p>
+              Maintained schedules, Jira tasks, dependencies, milestones, and team documentation.
+            </p>
+          </article>
+          <article class="card">
+            <span class="number">Audio Director</span>
+            <h3>Sound Direction &amp; Implementation Support</h3>
+            <p>
+              Guided the sound direction for racing feedback, rhythm energy, and the retro-futurist mood.
+            </p>
+          </article>
+          <article class="card">
+            <span class="number">QA Director</span>
+            <h3>Build Readiness &amp; Playtest Feedback</h3>
+            <p>
+              Coordinated 20+ builds, 500+ playtesters, and actionable feedback for stakeholders.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="gameplay">
+        <div class="section-heading">
+          <h2>Full Gameplay Recording</h2>
+          <p>
+            A longer gameplay recording for viewers who want to see the complete flow, pacing, and systems across a fuller play session.
+          </p>
+        </div>
+        <div class="media-grid">
+          <article class="media-card full">
+            <div class="embed">
+              <iframe
+                src="https://www.youtube.com/embed/-ygm9HDK5xk"
+                title="Interstellar Drive full gameplay recording"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen>
+              </iframe>
+            </div>
+            <div class="media-label">
+              <span>YouTube Gameplay</span>
+              <span>Full recording</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-heading">
+          <h2>Production Impact</h2>
+          <p>
+            My focus was making progress visible, keeping decisions documented, and reducing friction between disciplines.
+          </p>
+        </div>
+        <div class="summary-band">
+          <p>
+            I facilitated cross-discipline communication, managed asset and information flow, identified blockers, documented 150+ meeting notes in Notion, and communicated progress and risks to stakeholders.
           </p>
         </div>
       </section>
 
-      <section class="case-section">
-        <div class="case-visual">
-          <p>Final project media goes here.</p>
-        </div>
-        <div class="meta-grid" aria-label="Project metadata">
-          <article class="meta-card">
-            <span>Role</span>
-            <strong>Product & Production Lead</strong>
-          </article>
-          <article class="meta-card">
-            <span>Focus</span>
-            <strong>Racing Flow / Player Feedback</strong>
-          </article>
-          <article class="meta-card">
-            <span>Status</span>
-            <strong>Final Project Case Study</strong>
-          </article>
-        </div>
-      </section>
-
-      <section class="case-section">
-        <p class="eyebrow">Case Study Structure</p>
-        <h2 class="section-title">What this page should show</h2>
-        <div class="case-grid">
-          <article class="case-card">
-            <span>01</span>
-            <h2>Project Goal</h2>
-            <p>Explain the gameplay promise, target experience, and why this project matters in your portfolio.</p>
-          </article>
-          <article class="case-card">
-            <span>02</span>
-            <h2>Your Work</h2>
-            <p>Show your production planning, prioritization, roadmap decisions, player feedback thinking, and team coordination.</p>
-          </article>
-          <article class="case-card">
-            <span>03</span>
-            <h2>Result</h2>
-            <p>Use screenshots, clips, milestones, and reflection to show how the project evolved from concept to final playable work.</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="case-section">
-        <p class="eyebrow">Media Needed</p>
-        <h2 class="section-title">Next assets to add</h2>
-        <p class="note">
-          Replace the placeholder visual with final project screenshots, a gameplay clip, UI captures, process boards, or milestone images. The best hero image should be the one that immediately communicates the final project's identity.
-        </p>
-        <a class="back-link" href="../#project">Back to projects -&gt;</a>
-      </section>
+      <footer class="footer-nav">
+        <a href="../?project=interstellar-drive-final">Back to projects</a>
+        <a href="https://store.steampowered.com/app/3784700/Interstellar_Drive/" target="_blank" rel="noreferrer">Steam page</a>
+      </footer>
     </main>
   </body>
 </html>

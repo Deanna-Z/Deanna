@@ -3,17 +3,23 @@ import { articles } from './data/articles.js';
 import { profile } from './data/profile.js';
 import { projects, skills } from './data/projects.js';
 import { soundReel } from './data/sound.js';
+import { sanitizeEditableHtml } from './utils/editor.js';
 
 const storageKey = 'deanna-portfolio-edits';
 const filters = ['All', ...new Set(projects.map((project) => project.category))];
+const initialProjectId = getInitialProjectId();
+const initialProjectIndex = initialProjectId
+  ? projects.findIndex((project) => project.id === initialProjectId)
+  : 0;
 
 const state = {
   activeFilter: 'All',
   edits: loadEdits(),
   isEditing: false,
   menuOpen: false,
-  selectedReelIndex: 0,
-  selectedProjectId: projects[0].id
+  selectedMusicTrackIndex: 0,
+  selectedReelIndex: Math.max(initialProjectIndex, 0),
+  selectedProjectId: initialProjectId || projects[0].id
 };
 
 function render() {
@@ -35,6 +41,26 @@ function render() {
   });
 
   bindEvents();
+  scrollToInitialProject();
+}
+
+let didScrollToInitialProject = false;
+
+function getInitialProjectId() {
+  const params = new URLSearchParams(window.location.search);
+  const projectId = params.get('project');
+
+  if (projectId && projects.some((project) => project.id === projectId)) {
+    return projectId;
+  }
+
+  return null;
+}
+
+function scrollToInitialProject() {
+  if (didScrollToInitialProject || !initialProjectId) return;
+  didScrollToInitialProject = true;
+  scrollToProjectSpotlight({ topOffset: 170, behavior: 'auto' });
 }
 
 function bindEvents() {
@@ -55,7 +81,7 @@ function bindEvents() {
         content.projects[0].id;
       state.selectedReelIndex = 0;
       render();
-      scrollToProjectSpotlight();
+      scrollToProjectBrowser();
     });
   });
 
@@ -73,6 +99,19 @@ function bindEvents() {
     render();
   });
 
+  document.querySelector('[data-editor-bold]')?.addEventListener('mousedown', (event) => {
+    event.preventDefault();
+  });
+
+  document.querySelector('[data-editor-bold]')?.addEventListener('click', () => {
+    const editableElement = getSelectedEditableElement();
+    if (!editableElement) return;
+
+    editableElement.focus();
+    document.execCommand('bold');
+    saveEditableElement(editableElement);
+  });
+
   document.querySelector('[data-editor-reset]')?.addEventListener('click', () => {
     if (!window.confirm('Reset all local edits in this browser?')) return;
     state.edits = {};
@@ -84,6 +123,20 @@ function bindEvents() {
     const exportText = JSON.stringify(state.edits, null, 2);
     await navigator.clipboard.writeText(exportText);
     window.alert('Local edits copied to clipboard as JSON.');
+  });
+
+  document.querySelectorAll('[data-audio-track]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const trackIndex = Number(button.dataset.audioTrack);
+      if (!Number.isInteger(trackIndex)) return;
+
+      state.selectedMusicTrackIndex = trackIndex;
+      render();
+
+      requestAnimationFrame(() => {
+        document.querySelector('[data-music-player]')?.play?.().catch(() => {});
+      });
+    });
   });
 
   document.querySelector('[data-spotlight-font-scale]')?.addEventListener('input', (event) => {
@@ -99,13 +152,38 @@ function bindEvents() {
     event.target.nextElementSibling.textContent = `${Math.round(value * 100)}%`;
   });
 
+  document.querySelector('[data-project-filter-offset]')?.addEventListener('input', (event) => {
+    const value = Number(event.target.value);
+    if (!Number.isFinite(value)) return;
+
+    state.edits.settings = {
+      ...(state.edits.settings || {}),
+      projectFilterOffset: value
+    };
+    localStorage.setItem(storageKey, JSON.stringify(state.edits));
+    document.querySelector('.site-shell')?.style.setProperty('--project-filter-offset', `${value}vw`);
+    event.target.nextElementSibling.textContent = `${value}vw`;
+  });
+
   document.querySelectorAll('[data-edit-path]').forEach((element) => {
+    element.addEventListener('keydown', (event) => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'b') {
+        event.preventDefault();
+        document.execCommand('bold');
+        saveEditableElement(element);
+      }
+    });
+
+    element.addEventListener('paste', (event) => {
+      event.preventDefault();
+      const text = event.clipboardData?.getData('text/plain') || '';
+      document.execCommand('insertText', false, text);
+    });
+
     element.addEventListener('blur', () => {
-      const value = element.textContent.trim();
-      if (!value) return;
-      state.edits[element.dataset.editPath] = value;
-      localStorage.setItem(storageKey, JSON.stringify(state.edits));
-      render();
+      if (saveEditableElement(element)) {
+        render();
+      }
     });
   });
 }
@@ -207,10 +285,54 @@ function openProjectPage(card) {
   window.location.href = link;
 }
 
-function scrollToProjectSpotlight() {
+function scrollToProjectSpotlight({ topOffset = 112, behavior = 'smooth' } = {}) {
   requestAnimationFrame(() => {
-    document.querySelector('.project-spotlight')?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    requestAnimationFrame(() => {
+      const spotlight = document.querySelector('.project-spotlight');
+      if (!spotlight) return;
+
+      const targetTop = spotlight.getBoundingClientRect().top + window.scrollY - topOffset;
+      window.scrollTo({ top: targetTop, behavior });
+    });
   });
+}
+
+function scrollToProjectBrowser({ topOffset = 112, behavior = 'smooth' } = {}) {
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      const browser = document.querySelector('.project-browser');
+      if (!browser) return;
+
+      const targetTop = browser.getBoundingClientRect().top + window.scrollY - topOffset;
+      window.scrollTo({ top: targetTop, behavior });
+    });
+  });
+}
+
+function getSelectedEditableElement() {
+  const selection = window.getSelection();
+  if (!selection || selection.rangeCount === 0 || selection.isCollapsed) return null;
+
+  const anchorElement = getClosestEditableElement(selection.anchorNode);
+  const focusElement = getClosestEditableElement(selection.focusNode);
+
+  if (!anchorElement || anchorElement !== focusElement) return null;
+  return anchorElement;
+}
+
+function getClosestEditableElement(node) {
+  const element = node?.nodeType === Node.ELEMENT_NODE ? node : node?.parentElement;
+  return element?.closest?.('[data-edit-path]') || null;
+}
+
+function saveEditableElement(element) {
+  const value = sanitizeEditableHtml(element.innerHTML).trim();
+  if (!element.textContent.trim()) return false;
+
+  state.edits[element.dataset.editPath] = value;
+  localStorage.setItem(storageKey, JSON.stringify(state.edits));
+  element.innerHTML = value;
+  return true;
 }
 
 function createContent() {
@@ -231,10 +353,53 @@ function createContent() {
 
 function loadEdits() {
   try {
-    return JSON.parse(localStorage.getItem(storageKey)) || {};
+    const edits = JSON.parse(localStorage.getItem(storageKey)) || {};
+    return migrateEdits(edits);
   } catch {
     return {};
   }
+}
+
+function migrateEdits(edits) {
+  const dinnerDescriptionPath = 'projects.the-dinner.description';
+  const dinnerDescription = edits[dinnerDescriptionPath];
+  const interstellarDescriptionPath = 'projects.interstellar-drive-final.description';
+  const interstellarDescription = edits[interstellarDescriptionPath];
+  const soundDescriptionPath = 'soundReel.description';
+  const soundDescription = edits[soundDescriptionPath];
+  const soundFinalDescription =
+    'I co-create these Suno AI tracks through MIDI keyboard sketches, 10+ years of music theory study, and hands-on musicianship across eight instruments.';
+  const interstellarFinalDescription =
+    '🚀 A <b>co-op</b> <b>racing</b> 🚗 <b>rhythm 🎵 game</b> set in a 1970s retro-futurist universe, following a cosmic journey to discover the most beautiful music. As <b>Producer, Audio Director</b>, and <b>QA Director</b>, I helped guide <b>production planning</b>, <b>task tracking</b>, <b>audio direction</b> 🔊, and <b>QA testing</b>.';
+
+  if (
+    typeof dinnerDescription === 'string' &&
+    dinnerDescription.includes('Winner of Best Game') &&
+    !dinnerDescription.includes('🏆')
+  ) {
+    edits[dinnerDescriptionPath] = dinnerDescription.replace('Winner of Best Game', '🏆 Winner of Best Game');
+    localStorage.setItem(storageKey, JSON.stringify(edits));
+  }
+
+  if (
+    typeof interstellarDescription === 'string' &&
+    interstellarDescription.includes('co-op') &&
+    interstellarDescription.includes('racing') &&
+    interstellarDescription !== interstellarFinalDescription
+  ) {
+    edits[interstellarDescriptionPath] = interstellarFinalDescription;
+    localStorage.setItem(storageKey, JSON.stringify(edits));
+  }
+
+  if (
+    typeof soundDescription === 'string' &&
+    soundDescription.includes('My sound work connects player experience')
+  ) {
+    edits[soundDescriptionPath] = soundFinalDescription;
+    localStorage.setItem(storageKey, JSON.stringify(edits));
+  }
+
+  return edits;
 }
 
 function setContentValue(content, path, value) {
