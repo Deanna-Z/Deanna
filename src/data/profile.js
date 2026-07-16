@@ -22,7 +22,8 @@ export const profile = {
   },
   closingLine: 'Let&#039;s build the next playable milestone with clarity, momentum, and player-focused taste.',
   contact: {
-    email: 'https://outlook.live.com/mail/0/deeplink/compose?to=deanna0517%40hotmail.com',
+    email: 'mailto:deanna0517@hotmail.com',
+    emailAddress: 'deanna0517@hotmail.com',
     linkedin: 'https://www.linkedin.com/in/yaqing-deanna/'
   },
   resumePage: sitePath('resume/'),

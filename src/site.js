@@ -72,6 +72,7 @@ function scrollToInitialProject() {
 function bindEvents() {
   bindProjectReelDrag();
   bindProjectReelSelection();
+  bindContactCopy();
 
   document.querySelector('.menu-toggle')?.addEventListener('click', () => {
     state.menuOpen = !state.menuOpen;
@@ -191,6 +192,58 @@ function bindEvents() {
       }
     });
   });
+}
+
+function bindContactCopy() {
+  document.querySelectorAll('[data-copy-value]').forEach((link) => {
+    link.addEventListener('click', (event) => {
+      const href = link.getAttribute('href');
+      const target = link.getAttribute('target');
+
+      event.preventDefault();
+      copyText(link.dataset.copyValue);
+      showCopyStatus(link, link.dataset.copyLabel || 'Copied');
+
+      if (!href) return;
+      if (target === '_blank') {
+        window.open(href, '_blank', 'noopener,noreferrer');
+        return;
+      }
+
+      window.setTimeout(() => {
+        window.location.href = href;
+      }, 120);
+    });
+  });
+}
+
+async function copyText(value) {
+  if (!value) return;
+
+  try {
+    await navigator.clipboard.writeText(value);
+    return;
+  } catch {
+    const textarea = document.createElement('textarea');
+    textarea.value = value;
+    textarea.setAttribute('readonly', '');
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.append(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    textarea.remove();
+  }
+}
+
+function showCopyStatus(link, label) {
+  link.classList.add('is-copied');
+  link.dataset.copyStatus = label;
+  window.clearTimeout(link.copyStatusTimer);
+  link.copyStatusTimer = window.setTimeout(() => {
+    link.classList.remove('is-copied');
+    delete link.dataset.copyStatus;
+  }, 1800);
 }
 
 function bindProjectReelSelection() {
