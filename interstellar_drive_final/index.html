@@ -295,6 +295,49 @@
         height: 100%;
         width: 100%;
       }
+      .youtube-link-card {
+        align-items: center;
+        background:
+          linear-gradient(180deg, rgba(15, 16, 24, 0.12), rgba(15, 16, 24, 0.72)),
+          var(--youtube-thumb) center / cover;
+        color: white;
+        display: flex;
+        height: 100%;
+        justify-content: center;
+        position: relative;
+        text-align: center;
+        width: 100%;
+      }
+
+      .youtube-link-card::before {
+        background: #ff0033;
+        border-radius: 1.1rem;
+        box-shadow: 0 1rem 2.8rem rgba(0, 0, 0, 0.28);
+        color: white;
+        content: "▶";
+        display: grid;
+        font-size: clamp(1.6rem, 4vw, 3rem);
+        height: clamp(4rem, 8vw, 6rem);
+        left: 50%;
+        place-items: center;
+        position: absolute;
+        top: 48%;
+        transform: translate(-50%, -50%);
+        width: clamp(5.8rem, 11vw, 8.4rem);
+      }
+
+      .youtube-link-card span {
+        align-self: end;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 999px;
+        color: #171821;
+        font-size: clamp(1rem, 1.4vw, 1.25rem);
+        font-weight: 900;
+        margin-bottom: clamp(1.1rem, 3vw, 2rem);
+        padding: 0.75rem 1.1rem;
+        position: relative;
+        z-index: 1;
+      }
 
       .media-label {
         color: #626777;
@@ -636,12 +679,15 @@
         <div class="media-grid">
           <article class="media-card full">
             <div class="embed">
-              <iframe
-                src="https://www.youtube.com/embed/-ygm9HDK5xk"
-                title="Interstellar Drive full gameplay recording"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen>
-              </iframe>
+              <a
+                class="youtube-link-card"
+                style="--youtube-thumb: url('https://img.youtube.com/vi/-ygm9HDK5xk/maxresdefault.jpg')"
+                href="https://youtu.be/-ygm9HDK5xk"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Watch Interstellar Drive full gameplay recording on YouTube">
+                <span>Watch full gameplay on YouTube</span>
+              </a>
             </div>
             <div class="media-label">
               <span>YouTube Gameplay</span>
