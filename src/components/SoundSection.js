@@ -39,7 +39,7 @@ function renderMusicPlayer({ selectedMusicTrackIndex, selectedTrack, tracks }) {
       <div class="music-now">
         <div>
           <span>Now Playing</span>
-          <strong>${escapeHtml(selectedTrack.title)}</strong>
+          <strong data-now-playing-title>${escapeHtml(selectedTrack.title)}</strong>
         </div>
         <span class="music-wave" aria-hidden="true">
           <i></i><i></i><i></i><i></i><i></i>
@@ -53,6 +53,8 @@ function renderMusicPlayer({ selectedMusicTrackIndex, selectedTrack, tracks }) {
           <button
             class="${index === selectedMusicTrackIndex ? 'music-track is-active' : 'music-track'}"
             data-audio-track="${index}"
+            data-audio-src="${escapeHtml(track.src)}"
+            data-audio-title="${escapeHtml(track.title)}"
             type="button"
           >
             <span>${String(index + 1).padStart(2, '0')}</span>

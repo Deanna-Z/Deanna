@@ -23,6 +23,10 @@ const state = {
 };
 
 let savedEditableRange = null;
+let musicAudioContext = null;
+let musicAnalyser = null;
+let musicSource = null;
+let musicWaveAnimation = null;
 
 function render() {
   const root = document.getElementById('root');
@@ -134,19 +138,8 @@ function bindEvents() {
     window.alert('Local edits copied to clipboard as JSON.');
   });
 
-  document.querySelectorAll('[data-audio-track]').forEach((button) => {
-    button.addEventListener('click', () => {
-      const trackIndex = Number(button.dataset.audioTrack);
-      if (!Number.isInteger(trackIndex)) return;
+  bindMusicPlayer();
 
-      state.selectedMusicTrackIndex = trackIndex;
-      render();
-
-      requestAnimationFrame(() => {
-        document.querySelector('[data-music-player]')?.play?.().catch(() => {});
-      });
-    });
-  });
 
   document.querySelector('[data-spotlight-font-scale]')?.addEventListener('input', (event) => {
     const value = Number(event.target.value);
@@ -271,6 +264,93 @@ function bindProjectReelDrag() {
   }, true);
 }
 
+
+function bindMusicPlayer() {
+  const audio = document.querySelector('[data-music-player]');
+  const wave = document.querySelector('.music-wave');
+  const nowPlayingTitle = document.querySelector('[data-now-playing-title]');
+  const trackButtons = [...document.querySelectorAll('[data-audio-track]')];
+
+  if (!audio) return;
+
+  trackButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const trackIndex = Number(button.dataset.audioTrack);
+      if (!Number.isInteger(trackIndex)) return;
+
+      state.selectedMusicTrackIndex = trackIndex;
+      if (button.dataset.audioSrc && audio.getAttribute('src') !== button.dataset.audioSrc) {
+        audio.setAttribute('src', button.dataset.audioSrc);
+        audio.load?.();
+      }
+      if (nowPlayingTitle && button.dataset.audioTitle) {
+        nowPlayingTitle.textContent = button.dataset.audioTitle;
+      }
+
+      trackButtons.forEach((trackButton) => {
+        trackButton.classList.toggle('is-active', trackButton === button);
+      });
+
+      audio.play?.().catch(() => {});
+      startMusicWave(audio, wave);
+    });
+  });
+
+  audio.addEventListener('play', () => startMusicWave(audio, wave));
+  audio.addEventListener('pause', () => stopMusicWave(wave));
+  audio.addEventListener('ended', () => stopMusicWave(wave));
+}
+
+function startMusicWave(audio, wave) {
+  if (!audio || !wave) return;
+
+  try {
+    if (!musicAudioContext) {
+      musicAudioContext = new AudioContext();
+    }
+    if (musicAudioContext.state === 'suspended') {
+      musicAudioContext.resume();
+    }
+    if (!musicAnalyser) {
+      musicAnalyser = musicAudioContext.createAnalyser();
+      musicAnalyser.fftSize = 64;
+    }
+    if (!musicSource) {
+      musicSource = musicAudioContext.createMediaElementSource(audio);
+      musicSource.connect(musicAnalyser);
+      musicAnalyser.connect(musicAudioContext.destination);
+    }
+  } catch {
+    wave.classList.add('is-playing');
+    return;
+  }
+
+  const bars = [...wave.querySelectorAll('i')];
+  const data = new Uint8Array(musicAnalyser.frequencyBinCount);
+  wave.classList.add('is-playing');
+  cancelAnimationFrame(musicWaveAnimation);
+
+  const tick = () => {
+    musicAnalyser.getByteFrequencyData(data);
+    bars.forEach((bar, index) => {
+      const value = data[index * 3 + 2] || data[index] || 0;
+      const height = Math.max(18, Math.min(100, 18 + value / 2.4));
+      bar.style.height = `${height}%`;
+    });
+    musicWaveAnimation = requestAnimationFrame(tick);
+  };
+
+  tick();
+}
+
+function stopMusicWave(wave) {
+  cancelAnimationFrame(musicWaveAnimation);
+  musicWaveAnimation = null;
+  wave?.classList.remove('is-playing');
+  wave?.querySelectorAll('i').forEach((bar) => {
+    bar.style.height = '';
+  });
+}
 function selectProject(projectId, options = {}) {
   if (!projectId) return;
   state.selectedProjectId = projectId;
