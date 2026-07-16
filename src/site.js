@@ -205,14 +205,14 @@ function bindContactCopy() {
       showCopyStatus(link, link.dataset.copyLabel || 'Copied');
 
       if (!href) return;
-      if (target === '_blank') {
-        window.open(href, '_blank', 'noopener,noreferrer');
-        return;
-      }
-
       window.setTimeout(() => {
+        if (target === '_blank') {
+          window.open(href, '_blank', 'noopener,noreferrer');
+          return;
+        }
+
         window.location.href = href;
-      }, 120);
+      }, target === '_blank' ? 650 : 120);
     });
   });
 }
