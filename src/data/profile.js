@@ -1,4 +1,4 @@
-const basePath = import.meta.env.BASE_URL;
+const basePath = '/version0/';
 const sitePath = (path) => `${basePath}${path}`;
 
 export const profile = {
