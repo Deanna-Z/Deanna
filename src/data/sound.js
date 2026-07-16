@@ -1,4 +1,4 @@
-const basePath = '/version0/';
+const basePath = import.meta.env.BASE_URL;
 const sitePath = (path) => `${basePath}${path}`;
 
 export const soundReel = {
