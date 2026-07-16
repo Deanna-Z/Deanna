@@ -2219,9 +2219,35 @@ h2 {
 
   .story-card {
     flex-basis: auto;
+    grid-template-rows: auto auto;
+    height: auto;
     min-height: auto;
     opacity: 1 !important;
     transform: none !important;
+  }
+
+  .story-image {
+    aspect-ratio: 16 / 9;
+    height: auto;
+  }
+
+  .story-card-body,
+  .project-index .story-card-body {
+    gap: 0.72rem;
+    grid-template-rows: auto auto auto;
+    min-height: 0;
+    padding: 1rem 1.25rem 1.35rem;
+  }
+
+  .story-card h3,
+  .story-card p {
+    display: block;
+    -webkit-line-clamp: unset;
+    overflow: visible;
+  }
+
+  .story-card p {
+    line-height: 1.55;
   }
 
   .story-heading {
@@ -2634,5 +2660,33 @@ h2 {
   .project-index {
     padding-left: 1rem;
     padding-right: 1rem;
+  }
+}
+
+@media (max-width: 760px) {
+  .project-index .story-card {
+    flex-basis: min(25rem, calc(100vw - 2.5rem));
+    grid-template-rows: auto auto;
+    height: auto;
+    width: min(25rem, calc(100vw - 2.5rem));
+  }
+
+  .project-index .story-image {
+    aspect-ratio: 16 / 9;
+    height: auto;
+  }
+
+  .project-index .story-card-body {
+    gap: 0.72rem;
+    grid-template-rows: auto auto auto;
+    min-height: 0;
+    padding: 1rem 1.25rem 1.35rem;
+  }
+
+  .project-index .story-card h3,
+  .project-index .story-card p {
+    display: block;
+    -webkit-line-clamp: unset;
+    overflow: visible;
   }
 }
