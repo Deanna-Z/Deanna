@@ -4,7 +4,7 @@ const sitePath = (path) => `${basePath}${path}`;
 export const projects = [
   {
     id: 'interstellar-drive-final',
-    title: 'Sound Reel',
+    title: 'Interstellar Drive',
     category: 'Games',
     role: 'Capstone Project / Producer & Audio & QA',
     year: '2025',
